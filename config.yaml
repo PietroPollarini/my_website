@@ -7,10 +7,8 @@ disqusShortname: ''
 params:
   banner:
     buttonText: Get Started
-    #subtitle: |-
-    #  A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP
-    #  AND RELEASED UNDER THE CREATIVE COMMONS.
-    title: Hello, my name is Pietro Pollarini and I am a Masters in Analytics student at Lodnon Business School
+    subtitle: Hello, my name is Pietro Pollarini and I am a Masters in Analytics student at London Business School
+    title: Pietro Pollarini - Data Science Portfolio
   blog: {}
   contact: 
     address:
@@ -81,7 +79,7 @@ params:
   tiles:
     enable: yes
     showcase:
-      - image: london-business-school-Campus.jpeg
+      - image: pic01.jpg
         subtitle: Ipsum Dolor Sit Amet
         title: Aliquam
         url: blogs/aliquam
