@@ -8,7 +8,7 @@ params:
   banner:
     buttonText: Get Started
     subtitle: My Data Science Portfolio
-    title: Hello, my name is Pietro Pollarini and I am a Masters in Analytics student at London Business School
+    title: Hello, my name is Pietro Pollarini and I am eager to share my Machine Learning projects with you!
   blog: {}
   contact: 
     address:
