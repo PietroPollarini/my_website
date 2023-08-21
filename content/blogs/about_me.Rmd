@@ -1,0 +1,365 @@
+---
+categories:  
+- ""    #the front matter should be like the one found in, e.g., blog2.md. It cannot be like the normal Rmd we used
+- ""
+date: "2021-09-30"
+description: Risk-Return of DJIA stocks # the title that will show up once someone gets to this page
+draft: false
+image: spices.jpg # save picture in \static\img\blogs. Acceptable formats= jpg, jpeg, or png . Your iPhone pics wont work
+
+keywords: ""
+slug: about_me # slug is the shorthand URL address... no spaces plz
+title: About Me
+---
+
+```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)  # Load ggplot2, dplyr, and all the other tidyverse packages
+library(gapminder)  # gapminder dataset
+library(here)
+library(janitor)
+```
+
+# Task 1: Biography
+
+Introduction
+
+Hello, my name is **Pietro** and I am Italian. I have always lived in my hometown **Rimini** until the age of 19. At that time I moved to Milan to start my Bachelors at Bocconi University. Thereafter, I did an exchange in San Diego, California. Then, I studied for around 7 months in France, close to Paris and worked in Luxembourg.
+
+My favorite cities (among the ones I lived in) are the following:
+
+1.  Milan
+2.  Paris
+3.  Luxembourg
+4.  San Diego
+5.  Rimini
+
+However, I'm confident that London will be at the first sport very soon!
+
+**My Data Science Projects**
+
+Here is a link to my Data Science Portfolio, it displays a few projects that I have carried out <https://drive.google.com/drive/folders/19okiA2HWLr2QAc0r5xtt8BWxf2Wc1yq_?usp=share_link> Feel free to check it out!
+
+*Here is a picture of something I like:*
+
+![](/Users/Pietro/Desktop/sailing%20Small.png)
+
+# Task 2
+
+You have seen the `gapminder` dataset that has data on life expectancy, population, and GDP per capita for 142 countries from 1952 to 2007. To get a glimpse of the dataframe, namely to see the variable names, variable types, etc., we use the `glimpse` function. We also want to have a look at the first 20 rows of data.
+
+```{r}
+glimpse(gapminder)
+
+head(gapminder, 20) # look at the first 20 rows of the dataframe
+
+```
+
+Your task is to produce two graphs of how life expectancy has changed over the years for the `country` and the `continent` you come from.
+
+I have created the `country_data` and `continent_data` with the code below.
+
+```{r}
+country_data <- gapminder %>% 
+            filter(country == "Italy") 
+
+continent_data <- gapminder %>% 
+            filter(continent == "Europe")
+```
+
+First, create a plot of life expectancy over time for the single country you chose. Map `year` on the x-axis, and `lifeExp` on the y-axis. You should also use `geom_point()` to see the actual data points and `geom_smooth(se = FALSE)` to plot the underlying trendlines. You need to remove the comments **\#** from the lines below for your code to run.
+
+```{r, lifeExp_one_country}
+ plot1 <- ggplot(data = country_data, mapping = aes(x = year, y = lifeExp))+
+   geom_point() +
+   geom_smooth(se = FALSE)+
+   NULL 
+
+plot1
+```
+
+Next we need to add a title. Create a new plot, or extend plot1, using the `labs()` function to add an informative title to the plot.
+
+```{r, lifeExp_one_country_with_label}
+ plot1<- plot1 +
+   labs(title = "lifeExp over time in Italy") +
+   NULL
+
+
+plot1
+```
+
+Secondly, produce a plot for all countries in the *continent* you come from. (Hint: map the `country` variable to the colour aesthetic. You also want to map `country` to the `group` aesthetic, so all points for each country are grouped together).
+
+```{r lifeExp_one_continent}
+ ggplot(continent_data, mapping = aes(x =  year, y =  lifeExp, colour = country, group = country))+
+   geom_point() + 
+   geom_smooth(se = FALSE) +
+   NULL
+```
+
+Finally, using the original `gapminder` data, produce a life expectancy over time graph, grouped (or faceted) by continent. We will remove all legends, adding the `theme(legend.position="none")` in the end of our ggplot.
+
+```{r lifeExp_facet_by_continent}
+ ggplot(data = gapminder , mapping = aes(x =  year, y =  lifeExp, colour= continent))+
+   geom_point() + 
+   geom_smooth(se = FALSE) +
+   facet_wrap(~continent) +
+   theme(legend.position="none") + 
+   NULL
+```
+
+Given these trends, what can you say about life expectancy since 1952? Again, don't just say what's happening in the graph. Tell some sort of story and speculate about the differences in the patterns.
+
+The following statements are purely speculations:
+
+If we focus on the last plot, we can see that life expectancy has been increasing since 1952 in every continent. However, we can identify differences between the continents. Asia seems to be the continent which has experienced the largest increase in life exp. This, may be due to the fact that it is the continent that has had the biggest improvement in living coditions (ending point vs starting point in 1952).
+
+Another interesting case is that of Africa. This continent seems to lag behind with respect to the others which are more developed and technologically advanced. We can probably say that this continent is facing a high recalcitrance (likely caused by poverty) which prevents it from improving its living and economic condition.
+
+# Task 3: Animal rescue incidents attended by the London Fire Brigade
+
+[The London Fire Brigade](https://data.london.gov.uk/dataset/animal-rescue-incidents-attended-by-lfb) attends a range of non-fire incidents (which we call 'special services'). These 'special services' include assistance to animals that may be trapped or in distress. The data is provided from January 2009 and is updated monthly. A range of information is supplied for each incident including some location information (postcode, borough, ward), as well as the data/time of the incidents. We do not routinely record data about animal deaths or injuries.
+
+Please note that any cost included is a notional cost calculated based on the length of time rounded up to the nearest hour spent by Pump, Aerial and FRU appliances at the incident and charged at the current Brigade hourly rate.
+
+```{r load_animal_rescue_data, warning=FALSE, message=FALSE}
+
+url <- "https://data.london.gov.uk/download/animal-rescue-incidents-attended-by-lfb/01007433-55c2-4b8a-b799-626d9e3bc284/Animal%20Rescue%20incidents%20attended%20by%20LFB%20from%20Jan%202009.csv"
+
+animal_rescue <- read_csv(url,
+                          locale = locale(encoding = "CP1252")) %>% 
+  
+  #use janitor::clean_names() to clean names
+  janitor::clean_names()
+
+# quick look at the dataframe- how many rows- columns, type of variables (characters, numbers, etc )
+glimpse(animal_rescue)
+```
+
+One of the more useful things one can do with any data set is quick counts, namely to see how many observations fall within one category. For instance, if we wanted to count the number of incidents by year, we would either use `group_by()... summarise()` or, simply [`count()`](https://dplyr.tidyverse.org/reference/count.html)
+
+```{r, instances_by_calendar_year}
+
+animal_rescue %>% 
+  dplyr::group_by(cal_year) %>% 
+  summarise(count=n())
+
+animal_rescue %>% 
+  count(cal_year, name="count")
+
+```
+
+Once we `count()` how many incidents we have per year, we can pipe `%>%` the table to a ggplot and draw a simple time series chart.
+
+```{r}
+#| label: plot-by-calendar-year
+#| message: false
+#| warning: false
+#| fig-cap: Incidents over time.
+
+animal_rescue %>% 
+  count(cal_year, name="count") %>% 
+  
+  # we dont have all the data for 2023, so let us filter it out
+  filter(cal_year < 2023) %>% 
+  
+  # the result of count() is a dataframe, so we pass it to 
+  ggplot() + 
+  
+  # map year (cal_year) on the x-axis, count on the y-axis
+  aes( x = cal_year,
+       y = count)+
+  
+  # we just want a time-series, line graph
+  geom_line()+
+  
+  # also add the points to make graph easier to read
+  geom_point()+
+  
+  # make sure y-axis starts at zero
+  expand_limits(y = 0)+
+  
+  # add labels
+  labs(
+    title = "Animal rescue incidents have almost doubled post Covid-19",
+    subtitle = "Animal rescue incidents attended by the LBF",
+    x = NULL,
+    y = NULL,
+    caption = "Source: https://data.london.gov.uk/dataset/animal-rescue-incidents-attended-by-lfb") +
+  
+  theme_minimal() + 
+  
+  # change the theme, so title is left-aligned
+  theme(plot.title.position = "plot") +
+  
+  # add one final layer of NULL, so if you comment out any lines
+  # you never end up with a hanging `+` that awaits another ggplot layer
+  NULL
+
+```
+
+Let us try to see how many incidents we have by animal group. Again, we can do this either using group_by() and summarise(), or by using count()
+
+```{r}
+#| label: animal_group_percentages
+#| message: false
+#| warning: false
+
+
+animal_rescue %>% 
+  group_by(animal_group_parent) %>% 
+  
+  #group_by and summarise will produce a new column with the count in each animal group
+  summarise(count = n()) %>% 
+  
+  # mutate adds a new column; here we calculate the percentage
+  mutate(percent = round(100*count/sum(count),2)) %>% 
+  
+  # arrange() sorts the data by percent. Since the default sorting is min to max and we would like to see it sorted
+  # in descending order (max to min), we use arrange(desc()) 
+  arrange(desc(percent))
+
+
+animal_rescue %>% 
+  
+  #count does the same thing as group_by and summarise
+  # name = "count" will call the column with the counts "count" ( exciting, I know)
+  # and 'sort=TRUE' will sort them from max to min
+  count(animal_group_parent, name="count", sort=TRUE) %>% 
+  mutate(percent = round(100*count/sum(count),2))
+
+
+```
+
+Do you see anything strange in these tables?
+
+There has been an increasing from 2020 in the number of incidents. This may be due to the fact that during the pandemic people bought more pets compared to standard times. Thus, this may have caused the increase in number of accidents in the years following 2022.
+
+Moreover, it is interesting to see that cats are the pets most frequently involved in such accidents and they are followed by birds. We may even speculate that cats and birds get into fights between each other and this contributes to the high number of accidents for both categories.
+
+Finally, let us have a loot at the notional cost for rescuing each of these animals. As the LFB says,
+
+> Please note that any cost included is a notional cost calculated based on the length of time rounded up to the nearest hour spent by Pump, Aerial and FRU appliances at the incident and charged at the current Brigade hourly rate.
+
+There is two things we will do:
+
+1.  Calculate the mean and median `incident_notional_cost_a` for each `animal_group_parent`
+2.  Plot a boxplot to get a feel for the distribution of `incident_notional_cost_a` by `animal_group_parent`.
+
+Before we go on, however, we need to fix `incident_notional_cost_a` as it is stored as a `chr`, or character, rather than a number.
+
+```{r}
+#| label: parse_incident_cost
+#| message: false
+#| warning: false
+
+
+# what type is variable incident_notional_cost from dataframe `animal_rescue`
+typeof(animal_rescue$incident_notional_cost_a)
+
+# readr::parse_number() will convert any numerical values stored as characters into numbers
+animal_rescue <- animal_rescue %>% 
+
+  # we use mutate() to use the parse_number() function and overwrite the same variable
+  mutate(incident_notional_cost_a = parse_number(incident_notional_cost_a))
+
+# incident_notional_cost from dataframe `animal_rescue` is now 'double' or numeric
+typeof(animal_rescue$incident_notional_cost_a)
+
+```
+
+Now that `incident_notional_cost_a` is numeric, let us quickly calculate summary statistics for each animal group.
+
+```{r}
+#| label: stats_on_incident_cost
+#| message: false
+#| warning: false
+
+animal_rescue %>% 
+  
+  # group by animal_group_parent
+  group_by(animal_group_parent) %>% 
+  
+  # filter resulting data, so each group has at least 6 observations
+  filter(n()>6) %>% 
+  
+  # summarise() will collapse all values into 3 values: the mean, median, and count  
+  # we use na.rm=TRUE to make sure we remove any NAs, or cases where we do not have the incident cos
+  summarise(mean_incident_cost = mean (incident_notional_cost_a, na.rm=TRUE),
+            median_incident_cost = median (incident_notional_cost_a, na.rm=TRUE),
+            sd_incident_cost = sd (incident_notional_cost_a, na.rm=TRUE),
+            min_incident_cost = min (incident_notional_cost_a, na.rm=TRUE),
+            max_incident_cost = max (incident_notional_cost_a, na.rm=TRUE),
+            count = n()) %>% 
+  
+  # sort the resulting data in descending order. You choose whether to sort by count or mean cost.
+  arrange(desc(count))
+
+```
+
+Compare the mean and the median for each animal group. What do you think this is telling us? Anything else that stands out? Any outliers?
+
+Since the mean is larger than the median in the majority of the observations in the above table, this means that the distributions of the incident costs for the majority of pets are skewed to the right. Furthermore, we can say that there are some outliers in the upper end (right side of the graph) which cause the mean to be larger than the median for those pets.
+
+Finally, let us plot a few plots that show the distribution of incident_cost for each animal group.
+
+```{r}
+#| label: plots_on_incident_costs_by_animal_group
+#| message: false
+#| warning: false
+
+# base_plot
+base_plot <- animal_rescue %>% 
+  group_by(animal_group_parent) %>% 
+  filter(n()>6) %>% 
+  ggplot(aes(x=incident_notional_cost_a))+
+  facet_wrap(~animal_group_parent, scales = "free")+
+  theme_bw()
+
+base_plot + geom_histogram()
+base_plot + geom_density()
+base_plot + geom_boxplot()
+base_plot + stat_ecdf(geom = "step", pad = FALSE) +
+  scale_y_continuous(labels = scales::percent)
+
+
+
+```
+
+Which of these four graphs do you think best communicates the variability of the `incident_notional_cost_a` values? Also, can you please tell some sort of story (which animals are more expensive to rescue than others, the spread of values) and speculate about the differences in the patterns.
+
+I believe that all four graphs communicate very well the distribution of the costs. However, if I had to put them in order from less clear to clearest, it would be: 4,3,2,1. Graph 4 requires a little bit of additional thinking to understand it fully.
+
+# Bonus Question: Total LFB Animal Rescue Cost over time
+
+Using LFB's `incident_notional_cost_a`, plot a line graph showing the total incident notional cost between 2009 - 2022.
+
+```{r}
+dataset <- animal_rescue %>%
+    group_by(cal_year) %>%
+    filter(cal_year >= 2009 & cal_year <= 2022) %>%
+    summarize(sum_costs = sum(incident_notional_cost_a, na.rm = TRUE))
+  
+dataset
+
+ggplot(data = dataset, aes(x = cal_year, y = sum_costs)) +
+  geom_line() +
+  labs(title = "Total Incident Notional Cost (2009 - 2022)",
+       x = "Year",
+       y = "Total Notional Cost")
+
+
+
+```
+
+# Submit the assignment
+
+Knit the completed R Markdown file as an HTML document (use the "Knit" button at the top of the script editor window) and upload it to Canvas.
+
+## Details
+
+If you want to, please answer the following
+
+-   Who did you collaborate with: TYPE NAMES HERE
+-   Approximately how much time did you spend on this problem set: ANSWER HERE
+-   What, if anything, gave you the most trouble: ANSWER HERE

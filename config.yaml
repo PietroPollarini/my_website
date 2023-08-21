@@ -80,13 +80,13 @@ params:
     enable: yes
     showcase:
       - image: pic01.jpg
-        subtitle: Ipsum Dolor Sit Amet
-        title: Aliquam
-        url: blogs/aliquam
+        subtitle: Dow Jones stocks
+        title: Risk Return
+        url: blogs/risk_return
       - image: pic02.jpg
         subtitle: Feugiat Amet Tempus
-        title: Tempus
-        url: blogs/tempus
+        title: About Me
+        url: blogs/about_me
       - image: pic03.jpg
         subtitle: Lorem Etiam Nullam
         title: Magna
