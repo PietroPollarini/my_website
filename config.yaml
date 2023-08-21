@@ -8,8 +8,8 @@ params:
   banner:
     buttonText: Get Started
     #subtitle: |-
-      A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP
-      AND RELEASED UNDER THE CREATIVE COMMONS.
+    #  A RESPONSIVE SITE TEMPLATE DESIGNED BY HTML5 UP
+    #  AND RELEASED UNDER THE CREATIVE COMMONS.
     title: Hello, my name is Pietro Pollarini and I am a Masters in Analytics student at Lodnon Business School
   blog: {}
   contact: 
@@ -25,7 +25,7 @@ params:
         title: Email
     enable: yes
     phone:
-      - phone: +393487638687
+      - phone: +39 348 763 8687
         title: Phone
   custom_css: []
   custom_js: []
@@ -81,7 +81,7 @@ params:
   tiles:
     enable: yes
     showcase:
-      - image: pic01.jpg
+      - image: london-business-school-Campus.jpeg
         subtitle: Ipsum Dolor Sit Amet
         title: Aliquam
         url: blogs/aliquam
@@ -116,6 +116,7 @@ params:
       amet pharetra et feugiat tempus."
     title: Massa libero
     url: blogs
+
 markup: 
   goldmark: 
     renderer: 
